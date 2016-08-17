@@ -1,0 +1,9 @@
+---
+- hosts: vagrant
+  gather_facts: True
+  sudo: True
+  roles:
+    - common
+    - docker
+    - nginx
+    - postgresql

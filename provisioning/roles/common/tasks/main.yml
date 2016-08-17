@@ -1,0 +1,4 @@
+---
+- name: Upgrade all pre-installed packages
+  yum: name=* state=latest update_cache=yes
+

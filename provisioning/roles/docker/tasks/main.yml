@@ -1,0 +1,14 @@
+---
+- name: Install Docker YUM repository
+  yum_repository:
+    name: Docker Repository
+    baseurl: https://yum.dockerproject.org/repo/main/centos/7/
+    gpgkey: https://yum.dockerproject.org/gpg
+    gpgcheck: True
+
+- name: Install Docker Engine
+  yum: name=docker-engine state=present update_cache=True
+
+- name: Enable and start Docker Engine
+  service: name=docker state=started enabled=yes
+
