@@ -1,0 +1,29 @@
+---
+- name: Install YUM utilities
+  package: name=yum-utils state=present
+
+- name: Install build dependencies
+  command: yum-builddep python
+
+- name: Download and unarchive Python {{ python_version }} source code
+  unarchive:
+    src: https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz
+    remote_src: True
+    dest: /usr/local/bin/python3
+
+- name: Configure, make, and install Python from source
+  command: {{ item }}
+  with_items:
+    - configure
+    - make
+    - make install
+  args:
+    chdir: /usr/local/bin/python3/
+
+- name: Get the Python version number
+  command: python3 --version
+  register: installed_version
+
+- name: Validate Python 3 is installed
+  assert:
+    that: "'{{ python_version }}' in {{ installed_version.stdout }}"
