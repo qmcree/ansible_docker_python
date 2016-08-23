@@ -1,0 +1,51 @@
+---
+- name: Install uWSGI
+  pip:
+    executable: pip3
+    name: uwsgi
+    state: present
+
+- name: Configure
+  ini_file:
+    dest: "{{ uwsgi_config_path }}"
+    owner: nginx
+    group: www-data
+    mode: "ugo=r,u+w"
+    state: present
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  with_items:
+    - section: uwsgi
+      option: module
+      value: wsgi:application
+    - section: uwsgi
+      option: master
+      value: "true"
+    - section: uwsgi
+      option: socket
+      value: "{{ wsgi_host }}:{{ wsgi_port }}"
+    - section: uwsgi
+      option: chmod-socket
+      value: 644
+    - section: uwsgi
+      option: vacuum
+      value: "true"
+    - section: uwsgi
+      option: die-on-term
+      value: "true"
+    - section: uwsgi
+      option: chdir
+      value: "{{ nginx_web_root }}"
+    - section: uwsgi
+      option: wsgi-file
+      value: "{{ wsgi_file_path }}"
+    - section: uwsgi
+      option: processes
+      value: 4
+    - section: uwsgi
+      option: threads
+      value: 2
+    - section: uwsgi
+      option: stats
+      value: "{{ wsgi_host }}":9191

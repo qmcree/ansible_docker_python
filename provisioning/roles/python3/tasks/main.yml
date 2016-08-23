@@ -1,6 +1,9 @@
 ---
-- name: Install YUM utilities
-  package: name=yum-utils state=present
+- name: Install package prerequisites
+  package: name={{ item }} state=present
+  with_items:
+    - yum-utils
+    - build-essential
 
 - name: Install build dependencies
   command: yum-builddep python
@@ -27,3 +30,14 @@
 - name: Validate Python 3 is installed
   assert:
     that: "'{{ python_version }}' in {{ installed_version.stdout }}"
+
+- name: Get the Pip version number
+  command: pip3 --version
+  register: installed_version
+
+- name: Validate Pip is installed
+  assert:
+    that: "'{{ python_version }}' in {{ installed_version.stdout }}"
+
+- name: Install virtualenv
+  command: pip3 install virtualenv

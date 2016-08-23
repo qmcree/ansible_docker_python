@@ -1,0 +1,5 @@
+---
+nginx_image_name: webserver
+nginx_container_name: "{{ nginx_image_name }}"
+nginx_dir: /usr/share/nginx
+nginx_web_root: "{{ nginx_dir }}"/html

@@ -4,5 +4,8 @@
   sudo: True
   roles:
     - common
+    - python3
+    - docker
     - nginx
-    - postgresql
+    - postgres
+    - redis

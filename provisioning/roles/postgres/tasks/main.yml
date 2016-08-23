@@ -1,0 +1,21 @@
+---
+- name: Build docker image
+  docker_image:
+    name: "{{ postgres_image_name }}"
+    state: present
+
+- name: Run a new container from image
+  docker_container:
+    name: "{{ postgres_container_name }}"
+    user: postgres:www-data
+    volumes: /var/lib/postgres/data:/var/lib/postgresql/data:rw
+    state: started
+    keep_volumes: True
+    published_ports: 3306
+    log_driver: syslog
+    image: "{{ postgres_image_name }}"
+    restart_policy: always
+    restart_retries: 5
+    env:
+      POSTGRES_PASSWORD: 'test12345'
+  register: postgres_container

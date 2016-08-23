@@ -1,0 +1,5 @@
+---
+wsgi_host: 127.0.0.1
+wsgi_port: 3031
+wsgi_config_path: "{{ nginx_dir }}/uwsgi.ini"
+wsgi_file_path: "{{ nginx_web_root }}/wsgi.py"

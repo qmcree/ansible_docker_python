@@ -1,0 +1,26 @@
+---
+- name: Build docker image
+  docker_image:
+    name: "{{ nginx_image_name }}"
+    state: present
+
+- name: Run a new container from image
+  docker_container:
+    name: "{{ nginx_container_name }}"
+    user: nginx:www-data
+    volumes: /mnt/www:{{ nginx_web_root }}:ro
+    state: started
+    keep_volumes: True
+    published_ports: 80:80, 443:443
+    log_driver: syslog
+    image: "{{ nginx_image_name }}"
+
+- name: Add NGINX configuration to built container
+  template:
+    src: "{{ item }}"
+    dest: /{{ item }}
+    owner: nginx
+    group: www-data
+    mode: "ugo=r,u+w"
+  with_items:
+    - etc/nginx/nginx.conf
