@@ -3,8 +3,13 @@
   gather_facts: True
   become: True
   roles:
-    - common
-    - docker
-    - nginx
-    - postgres
-    - redis
+    - role: common
+      tags: common
+    - role: docker
+      tags: docker
+    - role: nginx
+      tags: nginx
+    - role: postgres
+      tags: postgres
+    - role: redis
+      tags: redis

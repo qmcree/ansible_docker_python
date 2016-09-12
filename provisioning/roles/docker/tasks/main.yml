@@ -1,10 +1,12 @@
 ---
 - name: Install Docker YUM repository
   yum_repository:
-    name: Docker Repository
+    name: Docker
+    description: Official Docker repository
     baseurl: https://yum.dockerproject.org/repo/main/centos/7/
     gpgkey: https://yum.dockerproject.org/gpg
     gpgcheck: True
+    keepcache: 0
 
 - name: Install Docker Engine
   package: name=docker-engine state=present update_cache=True
@@ -14,6 +16,6 @@
 
 - name: Install docker-py
   pip:
-    executable: pip3
+    executable: /usr/local/bin/pip3
     name: docker-py
     state: present

@@ -1,4 +1,11 @@
 ---
+- name: Get the Python version number (if it's already installed)
+  command: python3 --version
+  become: True
+  become_user: vagrant
+  ignore_errors: True
+  register: installed_version
+
 - name: Install package prerequisites
   package: name={{ item }} state=present
   with_items:
@@ -13,6 +20,7 @@
     dest: "{{ home_dir }}"
     remote_src: True
     copy: False
+  when: not installed_version
 
 - name: Make the directory where Python will be installed
   file: path={{ python_path }} state=directory
@@ -25,6 +33,7 @@
     - make install
   args:
     chdir: "{{ python_source_dir }}"
+  when: not installed_version
 
 - name: Get the Python version number
   command: python3 --version

@@ -1,13 +1,13 @@
 ---
 - name: Install uWSGI
   pip:
-    executable: pip3
+    executable: /usr/local/bin/pip3
     name: uwsgi
     state: present
 
 - name: Configure
   ini_file:
-    dest: "{{ uwsgi_config_path }}"
+    dest: "{{ wsgi_config_path }}"
     owner: nginx
     group: www-data
     mode: "ugo=r,u+w"
@@ -48,4 +48,4 @@
       value: 2
     - section: uwsgi
       option: stats
-      value: "{{ wsgi_host }}":9191
+      value: "{{ wsgi_host }}:9191"
