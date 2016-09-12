@@ -3,41 +3,45 @@
   package: name={{ item }} state=present
   with_items:
     - yum-utils
-    - build-essential
 
 - name: Install build dependencies
-  command: yum-builddep python
+  command: yum-builddep -y python
 
 - name: Download and unarchive Python {{ python_version }} source code
   unarchive:
-    src: https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz
+    src: "https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+    dest: "{{ home_dir }}"
     remote_src: True
-    dest: /usr/local/bin/python3
+    copy: False
+
+- name: Make the directory where Python will be installed
+  file: path={{ python_path }} state=directory
 
 - name: Configure, make, and install Python from source
-  command: {{ item }}
+  command: "{{ item }}"
   with_items:
-    - configure
+    - ./configure --prefix=/usr/local
     - make
     - make install
   args:
-    chdir: /usr/local/bin/python3/
+    chdir: "{{ python_source_dir }}"
 
 - name: Get the Python version number
   command: python3 --version
+  become: True
+  become_user: vagrant
   register: installed_version
 
 - name: Validate Python 3 is installed
   assert:
-    that: "'{{ python_version }}' in {{ installed_version.stdout }}"
+    that: "'{{ python_version }}' in '{{ installed_version.stdout }}'"
 
 - name: Get the Pip version number
   command: pip3 --version
+  become: True
+  become_user: vagrant
   register: installed_version
 
 - name: Validate Pip is installed
   assert:
-    that: "'{{ python_version }}' in {{ installed_version.stdout }}"
-
-- name: Install virtualenv
-  command: pip3 install virtualenv
+    that: "'{{ python_version_major }}.{{ python_version_minor }}' in '{{ installed_version.stdout }}'"

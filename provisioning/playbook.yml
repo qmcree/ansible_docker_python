@@ -1,10 +1,9 @@
 ---
-- hosts: vagrant
+- hosts: default
   gather_facts: True
-  sudo: True
+  become: True
   roles:
     - common
-    - python3
     - docker
     - nginx
     - postgres

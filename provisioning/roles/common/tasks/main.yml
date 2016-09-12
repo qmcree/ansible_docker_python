@@ -2,3 +2,5 @@
 - name: Upgrade all pre-installed packages
   package: name=* state=latest update_cache=yes
 
+- name: Install EPEL
+  package: name=epel-release state=present
